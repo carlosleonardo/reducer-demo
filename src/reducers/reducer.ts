@@ -4,12 +4,12 @@ export enum TipoAcao {
     ACAO_ADICIONAR,
     ACAO_ALTERAR,
     ACAO_EXCLUIR,
-    ACAO_OBTER_POR_ID,
 }
 
 export type Acao = {
-    tarefa: ModeloTarefa;
+    tarefa?: ModeloTarefa;
     tipo: TipoAcao;
+    id?: number;
 };
 
 export function tarefaReducer(
@@ -21,14 +21,19 @@ export function tarefaReducer(
             return [
                 ...tarefas,
                 {
-                    id: (acao.tarefa.id ?? 0) + 1,
-                    texto: acao.tarefa.texto,
-                    feita: acao.tarefa.feita,
+                    id: (acao.tarefa?.id ?? 0) + 1,
+                    texto: acao.tarefa?.texto ?? "",
+                    feita: false,
                 },
             ];
         case TipoAcao.ACAO_ALTERAR:
-            break;
+            return tarefas.map((tarefa) => {
+                if (tarefa.id === acao.tarefa?.id && acao.tarefa)
+                    return acao.tarefa;
+                return tarefa;
+            });
         case TipoAcao.ACAO_EXCLUIR:
+            return tarefas.filter((tarefa) => tarefa.id !== acao.id);
     }
-    return [];
+    return tarefas;
 }

@@ -1,13 +1,21 @@
-import { useReducer, useState } from "react";
+import { ChangeEvent, useReducer, useState } from "react";
 import "./App.css";
 import Tarefas from "./componentes/Tarefas";
 import { tarefaReducer, TipoAcao } from "./reducers/reducer";
+
+let novoId = 1;
 
 function App() {
     const [tarefas, despachar] = useReducer(tarefaReducer, []);
     const [nomeTarefa, definirNomeTarefa] = useState("");
     const [invalido, definirInvalido] = useState(true);
-    let novoId = 0;
+
+    function excluirTarefa(id: number) {
+        despachar({
+            tipo: TipoAcao.ACAO_EXCLUIR,
+            id: id,
+        });
+    }
 
     function aoMudarNomeTarefa(evento: ChangeEvent<HTMLInputElement>) {
         definirNomeTarefa(evento.target.value);
@@ -22,7 +30,7 @@ function App() {
         despachar({
             tipo: TipoAcao.ACAO_ADICIONAR,
             tarefa: {
-                id: novoId + 1,
+                id: novoId++,
                 texto: nomeTarefa,
                 feita: false,
             },
@@ -43,7 +51,7 @@ function App() {
             <button type="button" disabled={invalido} onClick={adicionarTarefa}>
                 Adicionar
             </button>
-            <Tarefas tarefas={tarefas} />
+            <Tarefas tarefas={tarefas} excluirTarefa={excluirTarefa} />
         </>
     );
 }

@@ -4,6 +4,7 @@ import Tarefa from "./Tarefa";
 
 export type TarefasProps = {
     tarefas: ModeloTarefa[];
+    excluirTarefa: (id: number) => void;
 };
 
 export default function Tarefas(props: TarefasProps) {
@@ -11,7 +12,13 @@ export default function Tarefas(props: TarefasProps) {
         <>
             <ul>
                 {props.tarefas.map((tarefa) => {
-                    return <Tarefa key={tarefa.id} tarefa={tarefa} />;
+                    return (
+                        <Tarefa
+                            key={tarefa.id}
+                            tarefa={tarefa}
+                            excluirTarefa={props.excluirTarefa}
+                        />
+                    );
                 })}
             </ul>
         </>
